@@ -23,11 +23,8 @@ If you don't like twitter like me then keep watching the Quick News below :)
 
 ## Quick News for SVN and upcoming versions
 
-*   <span style="text-decoration: line-through">Bing searching module implemented in SVN!</span> Currently broken :-O
-*   SSH-Logfiles can now be scanned and exploited through SSH username!
-*   You can now define which target to exploit and execute shell commands without the interactive exploit interface!
-*   New experimental fallback plugin which you can try when just /etc/passwd (or any other only-readable file was found.
-*   New fallback plugin for windows victims!
+*   fimap has moved! The official fimap site is now available at https://tha-imax.de/git/root/fimap
+*   Thank you to https://github.com/Oweoqi for doing the hard work and converting the project from googlecode to github!
 
 ## What works currently?
 
