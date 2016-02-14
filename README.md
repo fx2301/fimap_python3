@@ -12,6 +12,10 @@ I am dead serious.
 
 * * *
 
+**To clone this project, use the HTTPS link! SSH cloning doesn't work for guests.**
+
+* * * 
+
 Find fimap on twitter: [http://twitter.com/fimap](http://twitter.com/fimap)
 
 ## Quick News for SVN and upcoming versions
