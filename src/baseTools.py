@@ -62,11 +62,11 @@ class baseTools(object):
     BOX_HEADER_STYLE = (1, 1) 
     BOX_SPLITTER_STYLE = (3, 0)
     def getRandomStr(self):
-        chars = string.letters + string.digits
+        chars = string.ascii_letters + string.digits
         ret = ""
         for i in range(8):
             if (i==0):
-                ret = ret + random.choice(string.letters)
+                ret = ret + random.choice(string.ascii_letters)
             else:
                 ret = ret + random.choice(chars)
         return ret
