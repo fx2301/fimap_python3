@@ -10,8 +10,9 @@
 This module holds a mixin to specify a query class you can page through
 using the count and offset parameter.
 """
+from __future__ import absolute_import
 
-from mixin import QueryMixin
+from .mixin import QueryMixin
 
 class Pagable(QueryMixin):
     """
@@ -36,7 +37,7 @@ class Pagable(QueryMixin):
     
     def execute(self, *args, **kwargs):
         if self.count and self.offset and self.count + self.offset > 1000:
-            raise ValueError, "Count + Offset must be less than 1000"
+            raise ValueError("Count + Offset must be less than 1000")
         super(Pagable, self).execute(*args, **kwargs)
     
     def get_request_parameters(self):
@@ -57,10 +58,10 @@ class Pagable(QueryMixin):
     def set_count(self, value):
         if value is not None:
             if value < 1:
-                raise ValueError, 'Count must be positive'
+                raise ValueError('Count must be positive')
             
             elif value > 50:
-                raise ValueError, 'Count must be less than 50'
+                raise ValueError('Count must be less than 50')
         
         obj = self._clone()
         obj._count = value
@@ -72,10 +73,10 @@ class Pagable(QueryMixin):
     
     def set_offset(self, value):
         if value < 0:
-            raise ValueError, 'Offset must be positive'
+            raise ValueError('Offset must be positive')
         
         elif value > 1000:
-            raise ValueError, 'Offset must be less than 1000'
+            raise ValueError('Offset must be less than 1000')
         
         obj = self._clone()
         obj._offset = value

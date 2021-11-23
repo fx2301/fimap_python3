@@ -1,3 +1,4 @@
+from __future__ import print_function
 #
 # This file is part of fimap.
 #
@@ -126,16 +127,16 @@ class XML2Config(baseClass):
                 mindepth = int(mindepth)
                 maxdepth = int(maxdepth)
             except:
-                print "Mindepth and Maxdepth for blindmode have non-integer values!"
-                print "Fix it in the generic.xml!"
-                print "Committing suicide..."
+                print("Mindepth and Maxdepth for blindmode have non-integer values!")
+                print("Fix it in the generic.xml!")
+                print("Committing suicide...")
                 sys.exit(1)
                 
             if (mindepth > maxdepth):
-                print "Logic isn't your best friend eh?"
-                print "The mindepth value is greater than the maxdepth value!"
-                print "Fix that in the generic.xml!"
-                print "Committing suicide..."
+                print("Logic isn't your best friend eh?")
+                print("The mindepth value is greater than the maxdepth value!")
+                print("Fix that in the generic.xml!")
+                print("Committing suicide...")
                 sys.exit(1)
                 
             self._log("Mindepth (%d) and Maxdepth (%d) loaded from generic.xml."%(mindepth, maxdepth), self.LOG_DEBUG)
@@ -181,7 +182,7 @@ class XML2Config(baseClass):
             
             self.__loadLanguageSets()
         else:
-            print "generic.xml file not found! This file is very important!"
+            print("generic.xml file not found! This file is very important!")
             sys.exit(1)
     
     def getRealFile(self):
@@ -334,7 +335,7 @@ class baseLanguage(baseTools):
             self.XML_Langfile = xml.dom.minidom.parse(langfile)
             self.XML_Rootitem = self.XML_Langfile.firstChild
         else:
-            print "%s file not found!" %(langfile)
+            print("%s file not found!" %(langfile))
             sys.exit(1)
         
         self.LanguageName = langname
@@ -623,7 +624,7 @@ class fiPayload(baseTools):
                 ret = ret.replace(placeholder, inp)
             elif (type_ == "info"):
                 info = q.getAttribute("text")
-                print info
+                print(info)
             elif (type_ == "wait"):
                 info = q.getAttribute("text")
                 raw_input(info)

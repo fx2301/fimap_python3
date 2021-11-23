@@ -8,6 +8,8 @@
 # Code is licensed under MIT license.
 #
 
+from __future__ import print_function
+from future.utils import raise_
 import random
 import socket
 import urllib
@@ -53,19 +55,19 @@ class PoolHTTPConnection(httplib.HTTPConnection):
             try:
                 self.sock = socket.socket(af, socktype, proto)
                 if self.debuglevel > 0:
-                    print "connect: (%s, %s)" % (self.host, self.port)
+                    print("connect: (%s, %s)" % (self.host, self.port))
                 self.sock.settimeout(TIMEOUT)
                 self.sock.connect(sa)
-            except socket.error, msg:
+            except socket.error as msg:
                 if self.debuglevel > 0:
-                    print 'connect fail:', (self.host, self.port)
+                    print('connect fail:', (self.host, self.port))
                 if self.sock:
                     self.sock.close()
                 self.sock = None
                 continue
             break
         if not self.sock:
-            raise socket.error, msg
+            raise_(socket.error, msg)
 
 class PoolHTTPHandler(urllib2.HTTPHandler):
     def http_open(self, req):
@@ -88,11 +90,11 @@ class Browser(object):
         try:
             response = opener.open(request)
             return response.read()
-        except (urllib2.HTTPError, urllib2.URLError), e:
+        except (urllib2.HTTPError, urllib2.URLError) as e:
             raise BrowserError(url, str(e))
-        except (socket.error, socket.sslerror), msg:
+        except (socket.error, socket.sslerror) as msg:
             raise BrowserError(url, msg)
-        except socket.timeout, e:
+        except socket.timeout as e:
             raise BrowserError(url, "timeout")
         except:
             raise BrowserError(url, "unknown error")

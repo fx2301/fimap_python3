@@ -1,3 +1,4 @@
+from __future__ import print_function
 # 
 # Copyright (c) 2010 Xavier Garcia  xavi.garcia@gmail.com
 # All rights reserved.
@@ -89,14 +90,14 @@ class MsfXmlRpcListener:
 			ret = self.connection.auth.login(self.user,self.password)
 			self.token= ret['token']
 			if ret['result']!= 'success': raise MsfXmlRpcListenerErr("Error while connection to msfconsole: login didn't return success")
-		except socket.error, err: raise MsfXmlRpcListenerErr('Error while connection to msfconsole: %s' % str(err))
-		except xmlrpclib.Fault, err: raise MsfXmlRpcListenerErr('Error while login  to msfconsole: %s' % str(err))
+		except socket.error as err: raise MsfXmlRpcListenerErr('Error while connection to msfconsole: %s' % str(err))
+		except xmlrpclib.Fault as err: raise MsfXmlRpcListenerErr('Error while login  to msfconsole: %s' % str(err))
 
 	def launchHandler(self):
 		opts = { "LHOST" : self.lhost,"LPORT" : self.lport, "PAYLOAD": self.payload}
 		ret = self.connection.module.execute(self.token,"exploit","exploit/multi/handler",opts)
 		if ret['result']!='success': raise MsfXmlRpcListenerErr("Unexpected error while creating the listener")
-		print "Sleeping before returning the created payload..."
+		print("Sleeping before returning the created payload...")
 		time.sleep(5)
 		
 

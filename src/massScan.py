@@ -1,3 +1,4 @@
+from __future__ import print_function
 #
 # This file is part of fimap.
 #
@@ -34,7 +35,7 @@ class massScan:
         self.list = config["p_list"]
 
     def startMassScan(self):
-        print "MassScan reading file: '%s'..."%self.list
+        print("MassScan reading file: '%s'..."%self.list)
 
         f = open(self.list, "r")
         idx = 0
@@ -42,7 +43,7 @@ class massScan:
             if idx >= 0:
                 l = l.strip()
                 if (l.startswith("http://"), l.startswith("https://")):
-                    print "[%d][MASS_SCAN] Scanning: '%s'..." %(idx,l)
+                    print("[%d][MASS_SCAN] Scanning: '%s'..." %(idx,l))
                     single = singleScan(self.config)
                     single.setURL(l)
                     single.setQuite(True)
@@ -50,4 +51,4 @@ class massScan:
 
                     idx = idx +1
 
-        print "MassScan completed."
+        print("MassScan completed.")

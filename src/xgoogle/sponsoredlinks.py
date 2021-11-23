@@ -8,13 +8,15 @@
 # Code is licensed under MIT license.
 #
 
+from __future__ import absolute_import
+from future.utils import raise_
 import re
 import urllib
 import random
 from htmlentitydefs import name2codepoint
-from BeautifulSoup import BeautifulSoup
+from .BeautifulSoup import BeautifulSoup
 
-from browser import Browser, BrowserError
+from .browser import Browser, BrowserError
 
 #
 # TODO: join GoogleSearch and SponsoredLinks classes under a single base class
@@ -153,8 +155,8 @@ class SponsoredLinks(object):
 
         try:
             page = self.browser.get_page(safe_url)
-        except BrowserError, e:
-            raise SLError, "Failed getting %s: %s" % (e.url, e.error)
+        except BrowserError as e:
+            raise_(SLError, "Failed getting %s: %s" % (e.url, e.error))
 
         return BeautifulSoup(page)
 

@@ -1,3 +1,4 @@
+from __future__ import print_function
 #
 # This file is part of fimap.
 #
@@ -35,7 +36,7 @@ class googleScan:
         self.gs.results_per_page = self.config["p_results_per_query"];
         self.cooldown = self.config["p_googlesleep"];
         if (self.config["p_skippages"] > 0):
-            print "Google Scanner will skip the first %d pages..."%(self.config["p_skippages"])
+            print("Google Scanner will skip the first %d pages..."%(self.config["p_skippages"]))
 
 
     def getNextPage(self):
@@ -44,7 +45,7 @@ class googleScan:
         return(results)
 
     def startGoogleScan(self):
-        print "Querying Google Search: '%s' with max pages %d..."%(self.config["p_query"], self.config["p_pages"])
+        print("Querying Google Search: '%s' with max pages %d..."%(self.config["p_query"], self.config["p_pages"]))
 
         pagecnt = 0
         curtry = 0
@@ -62,7 +63,7 @@ class googleScan:
 
                 if (diff <= self.cooldown):
                     if (diff > 0): 
-                        print "Commencing %ds google cooldown..." %(self.cooldown - diff)
+                        print("Commencing %ds google cooldown..." %(self.cooldown - diff))
                         time.sleep(self.cooldown - diff)
                     
                 last_request_time = datetime.datetime.now()
@@ -71,13 +72,13 @@ class googleScan:
                 redo = False
               except KeyboardInterrupt:
                 raise
-              except Exception, err:
-                print err
+              except Exception as err:
+                print(err)
                 redo = True
                 sys.stderr.write("[RETRYING PAGE %d]\n" %(pagecnt))
                 curtry = curtry +1
                 if (curtry > self.config["p_maxtries"]):
-                    print "MAXIMAL COUNT OF (RE)TRIES REACHED!"
+                    print("MAXIMAL COUNT OF (RE)TRIES REACHED!")
                     sys.exit(1)
             
               
@@ -95,4 +96,4 @@ class googleScan:
             except KeyboardInterrupt:
                 raise
             time.sleep(1)
-        print "Google Scan completed."
+        print("Google Scan completed.")

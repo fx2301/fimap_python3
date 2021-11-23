@@ -1,3 +1,4 @@
+from __future__ import print_function
 #
 # This file is part of fimap.
 #
@@ -117,8 +118,8 @@ class singleScan(baseClass):
                         self.drawBox(header, boxarr)
         except KeyboardInterrupt:
             if (self.quite): # We are in google mode.
-                print "\nCancelled current target..."
-                print "Press CTRL+C again in the next second to terminate fimap."
+                print("\nCancelled current target...")
+                print("Press CTRL+C again in the next second to terminate fimap.")
                 try:
                     time.sleep(1)
                 except KeyboardInterrupt:
@@ -127,4 +128,4 @@ class singleScan(baseClass):
                 raise
     def localLog(self, txt):
         if (not self.quite):
-            print txt
+            print(txt)

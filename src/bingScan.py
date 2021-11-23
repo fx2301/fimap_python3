@@ -1,3 +1,4 @@
+from __future__ import print_function
 #
 # This file is part of fimap.
 #
@@ -35,11 +36,11 @@ class bingScan:
         self.cooldown = self.config["p_googlesleep"];
         self.results_per_page = int(self.config["p_results_per_query"]);
         if (self.config["p_skippages"] > 0):
-            print "Bing Scanner will skip the first %d pages..."%(self.config["p_skippages"])
+            print("Bing Scanner will skip the first %d pages..."%(self.config["p_skippages"]))
 
 
     def startGoogleScan(self):
-        print "Querying Bing Search: '%s' with max pages %d..."%(self.config["p_query"], self.config["p_pages"])
+        print("Querying Bing Search: '%s' with max pages %d..."%(self.config["p_query"], self.config["p_pages"]))
 
         pagecnt = 0
         curtry = 0
@@ -57,7 +58,7 @@ class bingScan:
 
                 if (diff <= self.cooldown):
                     if (diff > 0): 
-                        print "Commencing %ds bing cooldown..." %(self.cooldown - diff)
+                        print("Commencing %ds bing cooldown..." %(self.cooldown - diff))
                         time.sleep(self.cooldown - diff)
                     
                 last_request_time = datetime.datetime.now()
@@ -66,13 +67,13 @@ class bingScan:
                 redo = False
               except KeyboardInterrupt:
                 raise
-              except Exception, err:
+              except Exception as err:
                 raise
                 redo = True
                 sys.stderr.write("[RETRYING PAGE %d]\n" %(pagecnt))
                 curtry = curtry +1
                 if (curtry > self.config["p_maxtries"]):
-                    print "MAXIMUM COUNT OF (RE)TRIES REACHED!"
+                    print("MAXIMUM COUNT OF (RE)TRIES REACHED!")
                     sys.exit(1)
             
               
@@ -90,4 +91,4 @@ class bingScan:
             except KeyboardInterrupt:
                 raise
             time.sleep(1)
-        print "Bing Scan completed."
+        print("Bing Scan completed.")

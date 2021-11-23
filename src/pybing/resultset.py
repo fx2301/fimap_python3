@@ -19,7 +19,7 @@ class BingResultSet(object):
     """
     def __init__(self, query, offset=0, count=None):
         if not isinstance(query, BingQuery):
-            raise TypeError, 'query must be a BingQuery instance'
+            raise TypeError('query must be a BingQuery instance')
         
         self.query = query
         self.results = {}
@@ -37,7 +37,7 @@ class BingResultSet(object):
         resultset[4] or resultset[0:4]
         """
         if not isinstance(self.query, Pagable):
-            raise TypeError, 'Array access only supported on Pagable Queries'
+            raise TypeError('Array access only supported on Pagable Queries')
         
         if isinstance(key, int):
             absolute_index = self.get_offset()

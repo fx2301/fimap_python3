@@ -8,12 +8,14 @@
 # Code is licensed under MIT license.
 #
 
+from __future__ import absolute_import
+from future.utils import raise_
 import re
 import urllib
 from htmlentitydefs import name2codepoint
-from BeautifulSoup import BeautifulSoup
+from .BeautifulSoup import BeautifulSoup
 
-from browser import Browser, BrowserError
+from .browser import Browser, BrowserError
 
 class SearchError(Exception):
     """
@@ -143,8 +145,8 @@ class GoogleSearch(object):
 
         try:
             page = self.browser.get_page(safe_url)
-        except BrowserError, e:
-            raise SearchError, "Failed getting %s: %s" % (e.url, e.error)
+        except BrowserError as e:
+            raise_(SearchError, "Failed getting %s: %s" % (e.url, e.error))
 
         return BeautifulSoup(page)
 

@@ -1,3 +1,4 @@
+from __future__ import print_function
 # Copyright (c) 2010 Xavier Garcia  xavi.garcia@gmail.com 
 # Copyright (c) 2009, Fast-Track
 # The function toWinDebug() is an adapted version of the script
@@ -118,7 +119,7 @@ class MsfEncode(object):
 			fileopen,writefile = open(tmpPayload,'rb'),open(temp_path, 'w')
 
 		except:
-			print "Something went wrong...."
+			print("Something went wrong....")
 
 		FOOTER  = ''.join(map(lambda x:"echo "+x+">>T\n",
 		["RCX","%X ","N T.BIN","WDS:0","Q"])) 

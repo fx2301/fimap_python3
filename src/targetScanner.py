@@ -1,3 +1,4 @@
+from __future__ import print_function
 #
 # This file is part of fimap.
 #
@@ -323,7 +324,7 @@ class targetScanner (baseClass.baseClass):
                         
                     
                         for key,params in self.header.items():
-                            if (not head_done.has_key(key)):
+                            if (key not in head_done):
                                 head_done[key] = False
                             
                             if (not head_done[key]):
@@ -408,20 +409,20 @@ class targetScanner (baseClass.baseClass):
             if (s == None):
                 self._log("Failed to retrieve script path.", self.LOG_WARN)
 
-                print "[MINOR BUG FOUND]"
-                print "------------------------------------------------------"
-                print "It's possible that fimap was unable to retrieve the scriptpath"
-                print "because the regex for this kind of error message is missing."
+                print("[MINOR BUG FOUND]")
+                print("------------------------------------------------------")
+                print("It's possible that fimap was unable to retrieve the scriptpath")
+                print("because the regex for this kind of error message is missing.")
                 a = raw_input("Do you want to help me and send the URL of the site? [y = Print Info/N = Discard]")
                 if (a=="y" or a=="Y"):
-                    print "-----------SEND THIS TO 'fimap.dev@gmail.com'-----------"
-                    print "SUBJECT: fimap Regex"
-                    print "ERROR  : Failed to retrieve script path."
-                    print "URL    : " + URL
-                    print "-----------------------------------------------------------"
+                    print("-----------SEND THIS TO 'fimap.dev@gmail.com'-----------")
+                    print("SUBJECT: fimap Regex")
+                    print("ERROR  : Failed to retrieve script path.")
+                    print("URL    : " + URL)
+                    print("-----------------------------------------------------------")
                     raw_input("Copy it and press enter to proceed with scanning...")
                 else:
-                    print "No problem! I'll continue with your scan..."
+                    print("No problem! I'll continue with your scan...")
 
                 return(None)
             else:
@@ -690,13 +691,13 @@ class targetScanner (baseClass.baseClass):
                         try:
                             idx = int(inp)
                             if (idx < 1 or idx > len(choose)):
-                                print "Choose out of range..."
+                                print("Choose out of range...")
                             else:
                                 rep.setLanguage(choose[idx-1])
                                 langClass = xml2config.getAllLangSets()[rep.getLanguage()]
                                 break
                         except:
-                            print "Invalid Number!"
+                            print("Invalid Number!")
         
         
         

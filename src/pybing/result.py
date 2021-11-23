@@ -20,7 +20,7 @@ class BingResult(object):
             self.load_from_dict(result)
         
         else:
-            raise TypeError, 'Invalid result type'
+            raise TypeError('Invalid result type')
     
     def load_from_dict(self, data):
         for key, value in data.iteritems():

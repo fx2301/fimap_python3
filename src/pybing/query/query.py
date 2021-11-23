@@ -33,7 +33,7 @@ class BingQuery(QueryMixin):
     
     def set_query(self, query):
         if not query:
-            raise ValueError, 'Query cannot be empty or None'
+            raise ValueError('Query cannot be empty or None')
         
         obj = self._clone()
         obj._query = query
@@ -45,10 +45,10 @@ class BingQuery(QueryMixin):
     
     def execute(self):
         if not self.query:
-            raise ValueError, 'Query cannot be empty or None'
+            raise ValueError('Query cannot be empty or None')
         
         elif not self.SOURCE_TYPE:
-            raise ValueError, 'Source Type cannot be empty or None'
+            raise ValueError('Source Type cannot be empty or None')
         
         from pybing.resultset import BingResultSet
         return BingResultSet(self)
