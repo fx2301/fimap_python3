@@ -1,3 +1,17 @@
+Update: this repo has been ported by [fx2301](https://github.com/fx2301) from Python2 to Python3. To run:
+
+```
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+cd src
+python3 fimap.py -h
+```
+
+Original doc follows:
+
+---
+
 Welcome to the fimap project!
 =============================
 
