@@ -1,3 +1,6 @@
+from __future__ import print_function
+from __future__ import generators
+
 """Beautiful Soup
 Elixir and Tonic
 "The Screen-Scraper's Friend"
@@ -76,7 +79,6 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE, DAMMIT.
 
 """
-from __future__ import print_function
 from future import standard_library
 standard_library.install_aliases()
 from builtins import chr
@@ -87,7 +89,6 @@ from builtins import range
 from past.builtins import basestring
 from builtins import object
 from future.utils import raise_
-from __future__ import generators
 
 __author__ = "Leonard Richardson (leonardr@segfault.org)"
 __version__ = "3.0.6"
