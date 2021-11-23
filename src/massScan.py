@@ -21,6 +21,7 @@ from __future__ import print_function
 
 
 
+from builtins import object
 __author__="Iman Karim(ikarim2s@smail.inf.fh-brs.de)"
 __date__ ="$01.09.2009 04:28:51$"
 
@@ -28,7 +29,7 @@ from targetScanner import targetScanner
 from singleScan import singleScan
 
 
-class massScan:
+class massScan(object):
 
     def __init__(self, config):
         self.config = config

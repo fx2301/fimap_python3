@@ -9,11 +9,15 @@
 #
 
 from __future__ import absolute_import
+from future import standard_library
+standard_library.install_aliases()
+from builtins import chr
+from builtins import object
 from future.utils import raise_
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import random
-from htmlentitydefs import name2codepoint
+from html.entities import name2codepoint
 from .BeautifulSoup import BeautifulSoup
 
 from .browser import Browser, BrowserError
@@ -149,7 +153,7 @@ class SponsoredLinks(object):
             else:
                 url = SponsoredLinks.NEXT_PAGE_1
 
-        safe_url = url % { 'query': urllib.quote_plus(self.query),
+        safe_url = url % { 'query': urllib.parse.quote_plus(self.query),
                            'start': self._page * self._results_per_page,
                            'num': self._results_per_page }
 
@@ -189,7 +193,7 @@ class SponsoredLinks(object):
         if not match:
             self._maybe_raise(SLParseError, "URL inside a sponsored link was not found", result)
             return None, None
-        url = urllib.unquote(match.group(1))
+        url = urllib.parse.unquote(match.group(1))
         return title, url
 
     def _extract_display_url(self, result):
@@ -221,14 +225,14 @@ class SponsoredLinks(object):
         def entity_replacer(m):
             entity = m.group(1)
             if entity in name2codepoint:
-                return unichr(name2codepoint[entity])
+                return chr(name2codepoint[entity])
             else:
                 return m.group(0)
 
         def ascii_replacer(m):
             cp = int(m.group(1))
             if cp <= 255:
-                return unichr(cp)
+                return chr(cp)
             else:
                 return m.group(0)
 

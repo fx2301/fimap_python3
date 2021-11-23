@@ -9,12 +9,16 @@
 #
 
 from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
 from future.utils import raise_
 import random
 import socket
-import urllib
-import urllib2
-import httplib
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
+import http.client
 
 BROWSERS = (
     # Top most popular browsers in my access.log on 2009.02.12
@@ -45,7 +49,7 @@ class BrowserError(Exception):
         self.url = url
         self.error = error
 
-class PoolHTTPConnection(httplib.HTTPConnection):
+class PoolHTTPConnection(http.client.HTTPConnection):
     def connect(self):
         """Connect to the host and port specified in __init__."""
         msg = "getaddrinfo returns an empty list"
@@ -69,7 +73,7 @@ class PoolHTTPConnection(httplib.HTTPConnection):
         if not self.sock:
             raise_(socket.error, msg)
 
-class PoolHTTPHandler(urllib2.HTTPHandler):
+class PoolHTTPHandler(urllib.request.HTTPHandler):
     def http_open(self, req):
         return self.do_open(PoolHTTPConnection, req)
 
@@ -84,13 +88,13 @@ class Browser(object):
 
     def get_page(self, url, data=None):
         handlers = [PoolHTTPHandler]
-        opener = urllib2.build_opener(*handlers)
-        if data: data = urllib.urlencode(data)
-        request = urllib2.Request(url, data, self.headers)
+        opener = urllib.request.build_opener(*handlers)
+        if data: data = urllib.parse.urlencode(data)
+        request = urllib.request.Request(url, data, self.headers)
         try:
             response = opener.open(request)
             return response.read()
-        except (urllib2.HTTPError, urllib2.URLError) as e:
+        except (urllib.error.HTTPError, urllib.error.URLError) as e:
             raise BrowserError(url, str(e))
         except (socket.error, socket.sslerror) as msg:
             raise BrowserError(url, msg)

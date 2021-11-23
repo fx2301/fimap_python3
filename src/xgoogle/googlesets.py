@@ -9,11 +9,14 @@
 #
 
 from __future__ import absolute_import
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
 from future.utils import raise_
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import random
-from htmlentitydefs import name2codepoint
+from html.entities import name2codepoint
 from .BeautifulSoup import BeautifulSoup
 
 from .browser import Browser, BrowserError
@@ -70,7 +73,7 @@ class GoogleSets(object):
         else:
             url = GoogleSets.URL_SMALL
 
-        safe_items = [urllib.quote_plus(i) for i in self.items]
+        safe_items = [urllib.parse.quote_plus(i) for i in self.items]
         blank_items = 5 - len(safe_items)
         if blank_items > 0:
             safe_items += ['']*blank_items

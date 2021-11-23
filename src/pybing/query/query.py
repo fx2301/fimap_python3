@@ -10,7 +10,10 @@
 This module holds the base Query class used by the various types of Bing queries.
 """
 
-import copy, urllib, httplib2
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+import copy, urllib.request, urllib.parse, urllib.error, httplib2
 
 # Issue #1 (http://code.google.com/p/pybing/issues/detail?id=1)
 # Python 2.6 has json built in, 2.5 needs simplejson
@@ -64,7 +67,7 @@ class BingQuery(QueryMixin):
         return params
     
     def get_request_url(self):
-        query_string = urllib.urlencode(self.get_request_parameters())
+        query_string = urllib.parse.urlencode(self.get_request_parameters())
         return constants.JSON_ENDPOINT + '?' + query_string
     
     def get_search_response(self):
@@ -93,4 +96,4 @@ class BingQuery(QueryMixin):
     __str__ = __unicode__
     
     def __repr__(self):
-        return '<%s>' % unicode(self)
+        return '<%s>' % str(self)

@@ -18,6 +18,8 @@ from __future__ import print_function
 # or write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
+from builtins import input
+from builtins import str
 import xml.dom.minidom
 import base64
 import sys, os
@@ -215,7 +217,7 @@ class XML2Config(baseClass):
     def getAllReadfileRegex(self):
         ret = []
         langs = self.getAllLangSets()
-        for k,v in langs.items():
+        for k,v in list(langs.items()):
             readfile_regex = v.getReadfileDetectors()
             for reg in readfile_regex:
                 ret.append((k, reg))
@@ -224,7 +226,7 @@ class XML2Config(baseClass):
     def getAllSniperRegex(self):
         ret = []
         langs = self.getAllLangSets()
-        for k,v in langs.items():
+        for k,v in list(langs.items()):
             readfile_regex = v.getSniper()
             ret.append((k, readfile_regex))
         return(ret)
@@ -618,7 +620,7 @@ class fiPayload(baseTools):
             if (type_ == "question"):
                 question = q.getAttribute("text")
                 placeholder = q.getAttribute("placeholder")
-                inp = raw_input(question)
+                inp = input(question)
                 if (self.doBase64):
                     inp = base64.b64encode(inp)
                 ret = ret.replace(placeholder, inp)
@@ -627,7 +629,7 @@ class fiPayload(baseTools):
                 print(info)
             elif (type_ == "wait"):
                 info = q.getAttribute("text")
-                raw_input(info)
+                input(info)
         return(ret)
                     
 

@@ -2,6 +2,7 @@
 """By zeth0 from http://commandline.org.uk/"""
 from __future__ import print_function
 
+from builtins import object
 import os
 import tempfile
 

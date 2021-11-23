@@ -77,6 +77,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE, DAMMIT.
 
 """
 from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
+from builtins import chr
+from builtins import next
+from builtins import map
+from builtins import str
+from builtins import range
+from past.builtins import basestring
+from builtins import object
 from future.utils import raise_
 from __future__ import generators
 
@@ -91,7 +100,7 @@ import types
 import re
 import sgmllib
 try:
-  from htmlentitydefs import name2codepoint
+  from html.entities import name2codepoint
 except ImportError:
   name2codepoint = {}
 
@@ -102,7 +111,7 @@ DEFAULT_OUTPUT_ENCODING = "utf-8"
 
 # First, the classes that represent markup elements.
 
-class PageElement:
+class PageElement(object):
     """Contains the navigational information for some part of the page
     (either a tag or a piece of text)"""
 
@@ -144,7 +153,7 @@ class PageElement:
         #this element (and any children) hadn't been parsed. Connect
         #the two.
         lastChild = self._lastRecursiveChild()
-        nextElement = lastChild.next
+        nextElement = lastChild.__next__
 
         if self.previous:
             self.previous.next = nextElement
@@ -170,7 +179,7 @@ class PageElement:
 
     def insert(self, position, newChild):
         if (isinstance(newChild, basestring)
-            or isinstance(newChild, unicode)) \
+            or isinstance(newChild, str)) \
             and not isinstance(newChild, NavigableString):
             newChild = NavigableString(newChild)
 
@@ -224,7 +233,7 @@ class PageElement:
                 newChild.nextSibling.previousSibling = newChild
             newChildsLastElement.next = nextChild
 
-        if newChildsLastElement.next:
+        if newChildsLastElement.__next__:
             newChildsLastElement.next.previous = newChildsLastElement
         self.contents.insert(position, newChild)
 
@@ -341,7 +350,7 @@ class PageElement:
     def nextGenerator(self):
         i = self
         while i:
-            i = i.next
+            i = i.__next__
             yield i
 
     def nextSiblingGenerator(self):
@@ -376,22 +385,22 @@ class PageElement:
     def toEncoding(self, s, encoding=None):
         """Encodes an object to a string in some encoding, or to Unicode.
         ."""
-        if isinstance(s, unicode):
+        if isinstance(s, str):
             if encoding:
                 s = s.encode(encoding)
         elif isinstance(s, str):
             if encoding:
                 s = s.encode(encoding)
             else:
-                s = unicode(s)
+                s = str(s)
         else:
             if encoding:
                 s  = self.toEncoding(str(s), encoding)
             else:
-                s = unicode(s)
+                s = str(s)
         return s
 
-class NavigableString(unicode, PageElement):
+class NavigableString(str, PageElement):
 
     def __getnewargs__(self):
         return (NavigableString.__str__(self),)
@@ -441,7 +450,7 @@ class Tag(PageElement):
     def _invert(h):
         "Cheap function to invert a hash."
         i = {}
-        for k,v in h.items():
+        for k,v in list(h.items()):
             i[v] = k
         return i
 
@@ -460,7 +469,7 @@ class Tag(PageElement):
         escaped."""
         x = match.group(1)
         if self.convertHTMLEntities and x in name2codepoint:
-            return unichr(name2codepoint[x])
+            return chr(name2codepoint[x])
         elif x in self.XML_ENTITIES_TO_SPECIAL_CHARS:
             if self.convertXMLEntities:
                 return self.XML_ENTITIES_TO_SPECIAL_CHARS[x]
@@ -469,9 +478,9 @@ class Tag(PageElement):
         elif len(x) > 0 and x[0] == '#':
             # Handle numeric entities
             if len(x) > 1 and x[1] == 'x':
-                return unichr(int(x[2:], 16))
+                return chr(int(x[2:], 16))
             else:
-                return unichr(int(x[1:]))
+                return chr(int(x[1:]))
 
         elif self.escapeUnrecognizedEntities:
             return u'&amp;%s;' % x
@@ -503,7 +512,7 @@ class Tag(PageElement):
                                    re.sub("&(#\d+|#x[0-9a-fA-F]+|\w+);",
                                           self._convertEntities,
                                           k_val[1]))
-        self.attrs = map(convert, self.attrs)
+        self.attrs = list(map(convert, self.attrs))
 
     def get(self, key, default=None):
         """Returns the value of the 'key' attribute for the tag, or
@@ -530,7 +539,7 @@ class Tag(PageElement):
     def __contains__(self, x):
         return x in self.contents
 
-    def __nonzero__(self):
+    def __bool__(self):
         "A tag is non-None even if it has no contents."
         return True
 
@@ -799,7 +808,7 @@ class Tag(PageElement):
         raise StopIteration
 
 # Next, a couple classes to represent queries and their results.
-class SoupStrainer:
+class SoupStrainer(object):
     """Encapsulates a number of ways of matching a markup element (tag or
     text)."""
 
@@ -841,7 +850,7 @@ class SoupStrainer:
             else:
                 match = True
                 markupAttrMap = None
-                for attr, matchAgainst in self.attrs.items():
+                for attr, matchAgainst in list(self.attrs.items()):
                     if not markupAttrMap:
                          if hasattr(markupAttrs, 'get'):
                             markupAttrMap = markupAttrs
@@ -899,7 +908,7 @@ class SoupStrainer:
             if isinstance(markup, Tag):
                 markup = markup.name
             if markup and not isString(markup):
-                markup = unicode(markup)
+                markup = str(markup)
             #Now we know that chunk is either a string, or None.
             if hasattr(matchAgainst, 'match'):
                 # It's a regexp object.
@@ -909,8 +918,8 @@ class SoupStrainer:
             elif hasattr(matchAgainst, 'items'):
                 result = matchAgainst in markup
             elif matchAgainst and isString(markup):
-                if isinstance(markup, unicode):
-                    matchAgainst = unicode(matchAgainst)
+                if isinstance(markup, str):
+                    matchAgainst = str(matchAgainst)
                 else:
                     matchAgainst = str(matchAgainst)
 
@@ -937,7 +946,7 @@ def isString(s):
     """Convenience method that works with all 2.x versions of Python
     to determine whether or not something is stringlike."""
     try:
-        return isinstance(s, unicode) or isinstance(s, basestring)
+        return isinstance(s, str) or isinstance(s, basestring)
     except NameError:
         return isinstance(s, str)
 
@@ -949,7 +958,7 @@ def buildTagMap(default, *args):
     for portion in args:
         if hasattr(portion, 'items'):
             #It's a map. Merge it.
-            for k,v in portion.items():
+            for k,v in list(portion.items()):
                 built[k] = v
         elif isList(portion):
             #It's a list. Map each item to the default.
@@ -1087,14 +1096,14 @@ class BeautifulStoneSoup(Tag, SGMLParser):
     def _feed(self, inDocumentEncoding=None):
         # Convert the document to Unicode.
         markup = self.markup
-        if isinstance(markup, unicode):
+        if isinstance(markup, str):
             if not hasattr(self, 'originalEncoding'):
                 self.originalEncoding = None
         else:
             dammit = UnicodeDammit\
                      (markup, [self.fromEncoding, inDocumentEncoding],
                       smartQuotesTo=self.smartQuotesTo)
-            markup = dammit.unicode
+            markup = dammit.str
             self.originalEncoding = dammit.originalEncoding
         if markup:
             if self.markupMassage:
@@ -1260,7 +1269,7 @@ class BeautifulStoneSoup(Tag, SGMLParser):
         if self.quoteStack:
             #This is not a real tag.
             #print "<%s> is not real!" % name
-            attrs = ''.join(map(lambda x_y: ' %s="%s"' % (x_y[0], x_y[1]), attrs))
+            attrs = ''.join([' %s="%s"' % (x_y[0], x_y[1]) for x_y in attrs])
             self.handle_data('<%s%s>' % (name, attrs))
             return
         self.endData()
@@ -1323,7 +1332,7 @@ class BeautifulStoneSoup(Tag, SGMLParser):
     def handle_charref(self, ref):
         "Handle character references as data."
         if self.convertEntities:
-            data = unichr(int(ref))
+            data = chr(int(ref))
         else:
             data = '&#%s;' % ref
         self.handle_data(data)
@@ -1335,7 +1344,7 @@ class BeautifulStoneSoup(Tag, SGMLParser):
         data = None
         if self.convertHTMLEntities:
             try:
-                data = unichr(name2codepoint[ref])
+                data = chr(name2codepoint[ref])
             except KeyError:
                 pass
 
@@ -1675,7 +1684,7 @@ try:
 except ImportError:
     pass
 
-class UnicodeDammit:
+class UnicodeDammit(object):
     """A class for detecting the encoding of a *ML document and
     converting it to a Unicode string. If the source encoding is
     windows-1252, can replace MS smart quotes with their HTML or XML
@@ -1694,9 +1703,9 @@ class UnicodeDammit:
                      self._detectEncoding(markup)
         self.smartQuotesTo = smartQuotesTo
         self.triedEncodings = []
-        if markup == '' or isinstance(markup, unicode):
+        if markup == '' or isinstance(markup, str):
             self.originalEncoding = None
-            self.unicode = unicode(markup)
+            self.str = str(markup)
             return
 
         u = None
@@ -1709,7 +1718,7 @@ class UnicodeDammit:
                 if u: break
 
         # If no luck and we have auto-detection library, try that:
-        if not u and chardet and not isinstance(self.markup, unicode):
+        if not u and chardet and not isinstance(self.markup, str):
             u = self._convertFrom(chardet.detect(self.markup)['encoding'])
 
         # As a last resort, try utf-8 and windows-1252:
@@ -1717,7 +1726,7 @@ class UnicodeDammit:
             for proposed_encoding in ("utf-8", "windows-1252"):
                 u = self._convertFrom(proposed_encoding)
                 if u: break
-        self.unicode = u
+        self.str = u
         if not u: self.originalEncoding = None
 
     def _subMSChar(self, orig):
@@ -1781,7 +1790,7 @@ class UnicodeDammit:
         elif data[:4] == '\xff\xfe\x00\x00':
             encoding = 'utf-32le'
             data = data[4:]
-        newdata = unicode(data, encoding)
+        newdata = str(data, encoding)
         return newdata
 
     def _detectEncoding(self, xml_data):
@@ -1794,41 +1803,41 @@ class UnicodeDammit:
             elif xml_data[:4] == '\x00\x3c\x00\x3f':
                 # UTF-16BE
                 sniffed_xml_encoding = 'utf-16be'
-                xml_data = unicode(xml_data, 'utf-16be').encode('utf-8')
+                xml_data = str(xml_data, 'utf-16be').encode('utf-8')
             elif (len(xml_data) >= 4) and (xml_data[:2] == '\xfe\xff') \
                      and (xml_data[2:4] != '\x00\x00'):
                 # UTF-16BE with BOM
                 sniffed_xml_encoding = 'utf-16be'
-                xml_data = unicode(xml_data[2:], 'utf-16be').encode('utf-8')
+                xml_data = str(xml_data[2:], 'utf-16be').encode('utf-8')
             elif xml_data[:4] == '\x3c\x00\x3f\x00':
                 # UTF-16LE
                 sniffed_xml_encoding = 'utf-16le'
-                xml_data = unicode(xml_data, 'utf-16le').encode('utf-8')
+                xml_data = str(xml_data, 'utf-16le').encode('utf-8')
             elif (len(xml_data) >= 4) and (xml_data[:2] == '\xff\xfe') and \
                      (xml_data[2:4] != '\x00\x00'):
                 # UTF-16LE with BOM
                 sniffed_xml_encoding = 'utf-16le'
-                xml_data = unicode(xml_data[2:], 'utf-16le').encode('utf-8')
+                xml_data = str(xml_data[2:], 'utf-16le').encode('utf-8')
             elif xml_data[:4] == '\x00\x00\x00\x3c':
                 # UTF-32BE
                 sniffed_xml_encoding = 'utf-32be'
-                xml_data = unicode(xml_data, 'utf-32be').encode('utf-8')
+                xml_data = str(xml_data, 'utf-32be').encode('utf-8')
             elif xml_data[:4] == '\x3c\x00\x00\x00':
                 # UTF-32LE
                 sniffed_xml_encoding = 'utf-32le'
-                xml_data = unicode(xml_data, 'utf-32le').encode('utf-8')
+                xml_data = str(xml_data, 'utf-32le').encode('utf-8')
             elif xml_data[:4] == '\x00\x00\xfe\xff':
                 # UTF-32BE with BOM
                 sniffed_xml_encoding = 'utf-32be'
-                xml_data = unicode(xml_data[4:], 'utf-32be').encode('utf-8')
+                xml_data = str(xml_data[4:], 'utf-32be').encode('utf-8')
             elif xml_data[:4] == '\xff\xfe\x00\x00':
                 # UTF-32LE with BOM
                 sniffed_xml_encoding = 'utf-32le'
-                xml_data = unicode(xml_data[4:], 'utf-32le').encode('utf-8')
+                xml_data = str(xml_data[4:], 'utf-32le').encode('utf-8')
             elif xml_data[:3] == '\xef\xbb\xbf':
                 # UTF-8 with BOM
                 sniffed_xml_encoding = 'utf-8'
-                xml_data = unicode(xml_data[3:], 'utf-8').encode('utf-8')
+                xml_data = str(xml_data[3:], 'utf-8').encode('utf-8')
             else:
                 sniffed_xml_encoding = 'ascii'
                 pass
@@ -1887,7 +1896,7 @@ class UnicodeDammit:
                     250,251,252,253,254,255)
             import string
             c.EBCDIC_TO_ASCII_MAP = string.maketrans( \
-            ''.join(map(chr, range(256))), ''.join(map(chr, emap)))
+            ''.join(map(chr, list(range(256)))), ''.join(map(chr, emap)))
         return s.translate(c.EBCDIC_TO_ASCII_MAP)
 
     MS_CHARS = { '\x80' : ('euro', '20AC'),

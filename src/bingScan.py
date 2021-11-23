@@ -19,6 +19,7 @@ from __future__ import print_function
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 
+from builtins import object
 from singleScan import singleScan
 from targetScanner import targetScanner
 from pybing import Bing
@@ -28,7 +29,7 @@ import sys,time
 __author__="Iman Karim(ikarim2s@smail.inf.fh-brs.de)"
 __date__ ="$01.09.2009 06:55:16$"
 
-class bingScan:
+class bingScan(object):
 
     def __init__(self, config):
         self.config = config

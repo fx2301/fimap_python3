@@ -19,6 +19,12 @@ from __future__ import print_function
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import input
+from builtins import str
+from builtins import range
+from builtins import object
 from future.utils import raise_
 from tempfile import mkstemp
 from ftplib import FTP
@@ -36,13 +42,13 @@ import sys
 
 DEFAULT_AGENT = "fimap.googlecode.com"
 
-import urllib, httplib, copy, urllib2
+import urllib.request, urllib.parse, urllib.error, http.client, copy, urllib.request, urllib.error, urllib.parse
 import string,random,os,socket, os.path
 
 __author__="Iman Karim(ikarim2s@smail.inf.fh-brs.de)"
 __date__ ="$30.08.2009 20:02:04$"
 
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import string,random,os,socket
 
 new_stuff = {}
@@ -246,7 +252,7 @@ class baseClass (object):
             if (os.path.exists(backupfile)):
                 self._log("WARNING: I wanted to backup your old fimap_result to: %s" %(backupfile), self.LOG_WARN)
                 self._log("But this file already exists! Please define a backup path:", self.LOG_WARN)
-                backupfile = raw_input("Backup path: ")
+                backupfile = input("Backup path: ")
             print("Creating backup of your original XML to '%s'..." %(backupfile))
             shutil.copy(self.xmlfile, backupfile)
             print("Committing changes to orginal XML...")
@@ -579,7 +585,7 @@ class BrowserError(Exception):
     self.url = url
     self.error = error
 
-class PoolHTTPConnection(httplib.HTTPConnection):
+class PoolHTTPConnection(http.client.HTTPConnection):
     def connect(self):
         msg = "getaddrinfo returns an empty list"
         for res in socket.getaddrinfo(self.host, self.port, 0, socket.SOCK_STREAM):
@@ -597,7 +603,7 @@ class PoolHTTPConnection(httplib.HTTPConnection):
         if not self.sock:
             raise_(socket.error, msg)
 
-class PoolHTTPHandler(urllib2.HTTPHandler):
+class PoolHTTPHandler(urllib.request.HTTPHandler):
     def http_open(self, req):
         return self.do_open(PoolHTTPConnection, req)
 
@@ -609,29 +615,29 @@ class Browser(object):
         self.proxy = proxystring
 
     def get_page(self, url, data=None, additionalheader = None):
-        proxy_support = urllib2.ProxyHandler({})
+        proxy_support = urllib.request.ProxyHandler({})
         if (self.proxy != None):
-            proxy_support = urllib2.ProxyHandler({'http': self.proxy, 'https': self.proxy})
+            proxy_support = urllib.request.ProxyHandler({'http': self.proxy, 'https': self.proxy})
         handlers = [proxy_support]
 
-        opener = urllib2.build_opener(*handlers)
+        opener = urllib.request.build_opener(*handlers)
 
         if additionalheader != None:
-            for key, head in additionalheader.items():
+            for key, head in list(additionalheader.items()):
                 opener.addheaders.append((key, head))
 
         ret = None
         headers = None
         response = None
 
-        request = urllib2.Request(url, data, self.headers)
+        request = urllib.request.Request(url, data, self.headers)
         try:
             try:
                 response = opener.open(request)
                 ret = response.read()
 
                 info = response.info()
-                headers = copy.deepcopy(info.items())
+                headers = copy.deepcopy(list(info.items()))
 
             finally:
                 if response:

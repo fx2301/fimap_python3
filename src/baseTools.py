@@ -1,4 +1,5 @@
 from __future__ import print_function
+from __future__ import division
 #
 # This file is part of fimap.
 #
@@ -18,7 +19,14 @@ from __future__ import print_function
 # or write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
-import urllib, httplib, copy, urllib2
+from future import standard_library
+standard_library.install_aliases()
+from builtins import input
+from builtins import str
+from builtins import range
+from builtins import object
+from past.utils import old_div
+import urllib.request, urllib.parse, urllib.error, http.client, copy, urllib.request, urllib.error, urllib.parse
 import string,random,os,socket, os.path
 import xml.dom.minidom
 import shutil
@@ -107,7 +115,7 @@ class baseTools(object):
         if (usecolor != None):
             self.use_color = usecolor
         maxLen = self.__getLongestLine(textarray, header) + 5
-        headspacelen = (maxLen/2 - len(header)/2)
+        headspacelen = (old_div(maxLen,2) - old_div(len(header),2))
         print(self.boxsymbol* (maxLen+1))
         if (self.use_color):
             cheader = self.__getColorLine(header, self.BOX_HEADER_STYLE)
@@ -153,7 +161,7 @@ class baseTools(object):
     def suggest_update(self, orginal_file, replacement_file):
         #print orginal_file
         #print replacement_file
-        inp = raw_input("Do you want to update? [y/N]")
+        inp = input("Do you want to update? [y/N]")
         if (inp == "Y" or inp == "y"):
             print("Updating...")
             os.unlink(orginal_file)

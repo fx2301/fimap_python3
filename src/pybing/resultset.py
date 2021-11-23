@@ -10,6 +10,7 @@
 This module holds the logic for dealing with a set of results from a query.
 """
 
+from builtins import object
 from pybing import constants
 from pybing.query import BingQuery, Pagable
 

@@ -61,8 +61,8 @@ class singleScan(baseClass):
                         boxarr.append("::REQUEST")
                         boxarr.append("  [URL]        %s"%report.getURL())
                         if (report.getPostData() != None and report.getPostData() != ""): boxarr.append("  [POST]       %s"%report.getPostData())
-                        if (report.getHeader() != None and report.getHeader().keys() > 0):
-                            modkeys = ",".join(report.getHeader().keys())
+                        if (report.getHeader() != None and list(report.getHeader().keys()) > 0):
+                            modkeys = ",".join(list(report.getHeader().keys()))
                             boxarr.append("  [HEAD SENT]  %s"%(modkeys))
                         
                         boxarr.append("::VULN INFO")

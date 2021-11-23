@@ -29,6 +29,7 @@ from __future__ import print_function
 
 
 
+from builtins import input
 from plugininterface import basePlugin
 
 from plugins.msf.pymetasploit.MetasploitWrapper import *
@@ -71,7 +72,7 @@ class msf(basePlugin):
     	print("1) Perl reverse tcp")
     	print("2) Bash reverse tcp")
     	print("3) PHP reverse tcp")
-    	result=raw_input("Choose your payload: ")
+    	result=input("Choose your payload: ")
     	if int(result) == 1:
     		self.isShellCode=True
     		msfObj.linuxPerlReverseShell(lhost,lport)
@@ -99,9 +100,9 @@ class msf(basePlugin):
 
 
     def get_parameters(self):
-		self.lhost=raw_input("Please, introduce lhost: ")
+		self.lhost=input("Please, introduce lhost: ")
 		self.lhost=self.lhost.strip("\n")
-		self.lport=raw_input("Please, introduce lport: ")
+		self.lport=input("Please, introduce lport: ")
 		self.lport=self.lport.strip("\n")
 		self.password=getpass.getpass("Please, introduce the password for msfconsole: ")
 

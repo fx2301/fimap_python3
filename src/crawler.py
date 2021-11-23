@@ -19,14 +19,18 @@ from __future__ import print_function
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import hex
+from builtins import object
 import os.path
 from xgoogle.BeautifulSoup import BeautifulSoup
-import os, urllib2, urllib, socket
+import os, urllib.request, urllib.error, urllib.parse, urllib.request, urllib.parse, urllib.error, socket
 
 __author__="Iman Karim(ikarim2s@smail.inf.fh-brs.de)"
 __date__ ="$09.09.2009 21:52:30$"
 
-class crawler:
+class crawler(object):
 
     def __init__(self, config):
         self.goodTypes = ("html", "php", "php4", "php5", "jsp", "htm", "py", "pl", "asp", "cgi", "/")
@@ -123,7 +127,7 @@ class crawler:
     def __simpleGetRequest(self, URL, TimeOut=10):
         try:
             try:
-                opener = urllib2.build_opener()
+                opener = urllib.request.build_opener()
                 opener.addheaders = [('User-agent', self.config["p_useragent"])]
                 f = opener.open(URL, timeout=TimeOut) # TIMEOUT
                 ret = f.read()

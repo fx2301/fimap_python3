@@ -19,13 +19,16 @@ from __future__ import print_function
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
 from baseClass import baseClass
 from targetScanner import targetScanner
 from singleScan import singleScan
 from xgoogle import BeautifulSoup
 from copy import deepcopy
 from crawler import crawler
-import sys, time, Cookie
+import sys, time, http.cookies
 
 
 __author__="Iman Karim(ikarim2s@smail.inf.fh-brs.de)"
@@ -49,9 +52,9 @@ class autoawesome(baseClass):
             for head in headers:
                 if head[0] in ("set-cookie", "set-cookie2"):
                     cookie = head[1]
-                    c = Cookie.SimpleCookie()
+                    c = http.cookies.SimpleCookie()
                     c.load(cookie)
-                    for k,v in c.items():
+                    for k,v in list(c.items()):
                         extHeader += "%s=%s; " %(k, c[k].value)
         
         if (code == None):

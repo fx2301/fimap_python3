@@ -10,6 +10,7 @@
 This module holds the base BingResult class.
 """
 
+from builtins import object
 class BingResult(object):
     """
     The base BingResult class corresponds to a single result from a Bing
@@ -23,7 +24,7 @@ class BingResult(object):
             raise TypeError('Invalid result type')
     
     def load_from_dict(self, data):
-        for key, value in data.iteritems():
+        for key, value in data.items():
             setattr(self, key.lower(), value)
     
     def __repr__(self):

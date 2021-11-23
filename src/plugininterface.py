@@ -19,6 +19,9 @@ from __future__ import print_function
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 
+from builtins import str
+from builtins import input
+from builtins import object
 from baseClass import baseClass
 import os, sys
 import xml.dom.minidom
@@ -88,7 +91,7 @@ class plugininterface(baseClass):
                 self._log("\nPlugin '%s' just crashed!"%(p.getPluginName()), self.LOG_ERROR)
                 self._log("Please send a bugreport to the Plugin Developer: %s <%s>"%(p.getPluginAutor(), p.getPluginEmail()), self.LOG_ERROR)
                 self._log("Push enter to see the stacktrace.", self.LOG_WARN)
-                raw_input()
+                input()
                 print("%<--------------------------------------------")
                 raise
             
@@ -102,7 +105,7 @@ class plugininterface(baseClass):
     def getAllPluginObjects(self):
         return(self.plugins)
 
-class pluginXMLInfo:
+class pluginXMLInfo(object):
     def __init__(self, xmlfile):
         self.xmlFile = xmlfile
       

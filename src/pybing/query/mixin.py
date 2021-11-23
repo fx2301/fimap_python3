@@ -10,6 +10,7 @@
 This module holds the QueryMixin base class used for all queries.
 """
 
+from builtins import object
 class QueryMixin(object):
     """
     Any methods that might be mixed into queries should extend this

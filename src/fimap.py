@@ -19,6 +19,7 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 from __future__ import print_function
+from builtins import input
 from plugininterface import plugininterface
 from plugininterface import pluginXMLInfo
 import autoawesome
@@ -231,9 +232,9 @@ def list_results(lst = os.path.join(os.path.expanduser("~"), "fimap_result.xml")
 
 
 def show_report():
-    if (len(baseClass.new_stuff.items()) > 0):
+    if (len(list(baseClass.new_stuff.items())) > 0):
         print("New FI Bugs found in this session:")
-        for k,v in baseClass.new_stuff.items():
+        for k,v in list(baseClass.new_stuff.items()):
             print("\t- %d (probably) usable FI-Bugs on '%s'."%(v, k))
 
 
@@ -519,7 +520,7 @@ if __name__ == "__main__":
         
         print("Testing language sets defined in 'generic.xml'...")
         langsets = xmlconfig.getAllLangSets()
-        for name, langclass in langsets.items():
+        for name, langclass in list(langsets.items()):
             fname = os.path.basename(langclass.getLangFile())
             #print "Testing language '%s' for updates..." %(fname)
             langurl = defupdateurl + fname
@@ -570,7 +571,7 @@ if __name__ == "__main__":
         tools = baseTools.baseTools()
         header = "LIST OF TRUSTED PLUGINS"
         boxarr = []
-        for k,(l,n,v,u) in choice.items():
+        for k,(l,n,v,u) in list(choice.items()):
             instver = pluginman.getPluginVersion(n)
             if (instver == None):
                 boxarr.append("[%d] %s - At version %d not installed." %(k, l, v))
@@ -582,7 +583,7 @@ if __name__ == "__main__":
         tools.drawBox(header, boxarr, False)
         nr = None    
     
-        nr = raw_input("Choose a plugin to install: ")
+        nr = input("Choose a plugin to install: ")
         if (nr != "q"):
             (l,n,v,u) = choice[int(nr)]
             print("Downloading plugin '%s' (%s)..." %(n, u))
@@ -608,9 +609,9 @@ if __name__ == "__main__":
                         if (ver != None):
                             inp = ""
                             if (ver > info.getVersion()):
-                                inp = raw_input("Do you really want to downgrade this plugin? [y/N]")
+                                inp = input("Do you really want to downgrade this plugin? [y/N]")
                             elif (ver == info.getVersion()):
-                                inp = raw_input("Do you really want to reinstall this plugin? [y/N]")
+                                inp = input("Do you really want to reinstall this plugin? [y/N]")
 
                             if (inp == "Y" or inp == "y"):
                                 dir = info.getStartupClass()
@@ -770,7 +771,7 @@ if __name__ == "__main__":
         print("You have just found a bug!")
         print("If you are cool, send the following stacktrace to the bugtracker on http://fimap.googlecode.com/")
         print("Please also provide the URL where fimap crashed.")
-        raw_input("Push enter to see the stacktrace...")
+        input("Push enter to see the stacktrace...")
         print("cut here %<--------------------------------------------------------------")
         print("Exception: %s" %err)
         raise

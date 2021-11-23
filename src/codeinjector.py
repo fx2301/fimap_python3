@@ -18,6 +18,10 @@ from __future__ import print_function
 # or write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
+from future import standard_library
+standard_library.install_aliases()
+from builtins import input
+from builtins import object
 from base64 import b64decode
 import pickle
 import base64
@@ -26,8 +30,8 @@ import os
 import sys
 from baseClass import baseClass
 from config import settings
-import urllib2
-import urlparse
+import urllib.request, urllib.error, urllib.parse
+import urllib.parse
 
 __author__="Iman Karim(ikarim2s@smail.inf.fh-brs.de)"
 __date__ ="$03.09.2009 03:40:49$"
@@ -283,7 +287,7 @@ class codeinjector(baseClass):
                 
                 while (1==1):
                     self.drawBox(header, textarr)
-                    inp = raw_input("Your Selection: ")
+                    inp = input("Your Selection: ")
                     if (inp == "q" or inp == "Q"):
                         break
                     try:
@@ -404,7 +408,7 @@ class codeinjector(baseClass):
                                     
                             else:
                                 # Ask the user for a shell command.
-                                cmd = raw_input("fishell@%s:%s$> " %(curusr,curdir))
+                                cmd = input("fishell@%s:%s$> " %(curusr,curdir))
                             if cmd == "q" or cmd == "quit": break
                             
                             try:
@@ -465,10 +469,10 @@ class codeinjector(baseClass):
             try:
                 self._log("Injection not possible! It looks like a file disclosure bug.", self.LOG_WARN)
                 self._log("fimap can currently not readout files comfortably.", self.LOG_WARN)
-                go = raw_input("Do you still want to readout files (even without filtering them)? [Y/n] ")
+                go = input("Do you still want to readout files (even without filtering them)? [Y/n] ")
                 if (go == "Y" or go == "y" or go == ""):
                     while 1==1:
-                        inp = raw_input("Absolute filepath you want to read out: ")
+                        inp = input("Absolute filepath you want to read out: ")
                         if (inp == "q"):
                             print("Fix this hole! Bye.")
                             sys.exit(0)
@@ -640,7 +644,7 @@ class codeinjector(baseClass):
         xml2config = self.config["XML2CONFIG"]
         langClass = xml2config.getAllLangSets()
         
-        for langName, langObj in langClass.items():
+        for langName, langObj in list(langClass.items()):
             print("Testing language %s..." %(langName))
             c, r = langObj.generateQuiz()
             
@@ -741,7 +745,7 @@ class codeinjector(baseClass):
         textarr.append("[q] Quit")
         self.drawBox(header, textarr)
         while (1==1):
-            tech = raw_input("Choose Attack: ")
+            tech = input("Choose Attack: ")
             try:
                 if (tech.strip() == "q"):
                     sys.exit(0)
@@ -846,7 +850,7 @@ class codeinjector(baseClass):
 
 
         while(1==1):
-            c = raw_input("Choose Domain: ")
+            c = input("Choose Domain: ")
             if (c == "q"):
                 sys.exit(0)
             elif (c == "?"):
@@ -940,7 +944,7 @@ class codeinjector(baseClass):
         
 
         while (1==1):
-            c = raw_input("Choose vulnerable script: ")
+            c = input("Choose vulnerable script: ")
             if (c == "q"):
                 sys.exit(0)
             try:
@@ -951,7 +955,7 @@ class codeinjector(baseClass):
                 print("Invalid script ID.")
                 
                 
-class HaxHelper:
+class HaxHelper(object):
     def __init__(self, parent, url, postdata, mode, langClass, suffix, isUnix, sys_inject_works, working_shell):
         """ Initiator of HaxHelper. As plugin developer you should never use this. """
         self.parent_codeinjector = parent
@@ -1060,7 +1064,7 @@ class HaxHelper:
     def getRawHTTPRequest(self, customFile):
         path, post, header, payload = self.parent_codeinjector.getPreparedComponents(customFile)
         hasPost = post != None and post != ""
-        host = urlparse.urlsplit(self.url)[1]
+        host = urllib.parse.urlsplit(self.url)[1]
         
         ret = ""
         if (not hasPost):

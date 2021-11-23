@@ -20,10 +20,11 @@
 
 
 
+from builtins import object
 __author__="Iman Karim(ikarim2s@smail.inf.fh-brs.de)"
 __date__ ="$01.09.2009 09:56:24$"
 
-class report:
+class report(object):
     def __init__(self, URL, Params, VulnKey):
         self.URL = URL
         self.Prefix = None
@@ -212,7 +213,7 @@ class report:
         return(url)
 
     def autoDetectLanguageByExtention(self, languageSets):
-        for Name, langClass in languageSets.items():
+        for Name, langClass in list(languageSets.items()):
             exts = langClass.getExtentions()
             for ext in exts:
                 if (self.URL.find(ext) != -1):

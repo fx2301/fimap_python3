@@ -27,7 +27,11 @@ from __future__ import print_function
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-import xmlrpclib
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
+import xmlrpc.client
 import socket 
 import sys
 import time
@@ -41,7 +45,7 @@ class MsfXmlRpcListenerErr(Exception):
 
 
 
-class MsfXmlRpcListener:
+class MsfXmlRpcListener(object):
 	payload="cmd/unix/reverse_netcat"
 	lport="8080"
 	lhost="127.0.0.1"
@@ -85,13 +89,13 @@ class MsfXmlRpcListener:
 
 	#msf > load xmlrpc Pass=abc123 ServerType=Web	
 	def login(self):
-		self.connection = xmlrpclib.ServerProxy("http://localhost:55553")
+		self.connection = xmlrpc.client.ServerProxy("http://localhost:55553")
 		try:
 			ret = self.connection.auth.login(self.user,self.password)
 			self.token= ret['token']
 			if ret['result']!= 'success': raise MsfXmlRpcListenerErr("Error while connection to msfconsole: login didn't return success")
 		except socket.error as err: raise MsfXmlRpcListenerErr('Error while connection to msfconsole: %s' % str(err))
-		except xmlrpclib.Fault as err: raise MsfXmlRpcListenerErr('Error while login  to msfconsole: %s' % str(err))
+		except xmlrpc.client.Fault as err: raise MsfXmlRpcListenerErr('Error while login  to msfconsole: %s' % str(err))
 
 	def launchHandler(self):
 		opts = { "LHOST" : self.lhost,"LPORT" : self.lport, "PAYLOAD": self.payload}

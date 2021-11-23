@@ -9,10 +9,14 @@
 #
 
 from __future__ import absolute_import
+from future import standard_library
+standard_library.install_aliases()
+from builtins import chr
+from builtins import object
 from future.utils import raise_
 import re
-import urllib
-from htmlentitydefs import name2codepoint
+import urllib.request, urllib.parse, urllib.error
+from html.entities import name2codepoint
 from .BeautifulSoup import BeautifulSoup
 
 from .browser import Browser, BrowserError
@@ -41,7 +45,7 @@ class ParseError(SearchError):
     def html(self):
         return self.tag.prettify()
 
-class SearchResult:
+class SearchResult(object):
     def __init__(self, title, url, desc):
         self.title = title
         self.url = url
@@ -139,7 +143,7 @@ class GoogleSearch(object):
             else:
                 url = GoogleSearch.NEXT_PAGE_1
 
-        safe_url = url % { 'query': urllib.quote_plus(self.query),
+        safe_url = url % { 'query': urllib.parse.quote_plus(self.query),
                            'start': self._page * self._results_per_page,
                            'num': self._results_per_page }
 
@@ -194,7 +198,7 @@ class GoogleSearch(object):
         url = title_a['href']
         match = re.match(r'/url\?q=(http[^&]+)&', url)
         if match:
-            url = urllib.unquote(match.group(1))
+            url = urllib.parse.unquote(match.group(1))
         return title, url
 
     def _extract_description(self, result):
@@ -227,14 +231,14 @@ class GoogleSearch(object):
         def entity_replacer(m):
             entity = m.group(1)
             if entity in name2codepoint:
-                return unichr(name2codepoint[entity])
+                return chr(name2codepoint[entity])
             else:
                 return m.group(0)
 
         def ascii_replacer(m):
             cp = int(m.group(1))
             if cp <= 255:
-                return unichr(cp)
+                return chr(cp)
             else:
                 return m.group(0)
 

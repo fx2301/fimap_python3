@@ -19,6 +19,8 @@ from __future__ import print_function
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 
+from builtins import input
+from builtins import range
 from config import settings
 from copy import copy, deepcopy
 import pickle
@@ -73,7 +75,7 @@ class targetScanner (baseClass.baseClass):
         self._log("Analyzing provided headers...", self.LOG_DEBUG);
         header = self.config["header"]
         if (len(header) > 0):
-            for key, headerString in header.items():
+            for key, headerString in list(header.items()):
                 self.header[key] = {}
                 if (headerString.find(";") == -1):
                     self.__addToken(self.header[key], headerString)
@@ -109,7 +111,7 @@ class targetScanner (baseClass.baseClass):
             code = self.doPostRequest(tmpurl, tmppost, additionalHeaders=headDict)
 
         if (len(headDict)>0):
-            for ck,vv in headDict.items():
+            for ck,vv in list(headDict.items()):
                 self._log("  Header: '%s' -> %s"%(ck, vv), self.LOG_DEBUG)
 
         xml2config = self.config["XML2CONFIG"]
@@ -248,14 +250,14 @@ class targetScanner (baseClass.baseClass):
         self._log("Fiddling around with URL...", self.LOG_INFO)
 
         # Scan Get
-        for k,v in self.params.items():
+        for k,v in list(self.params.items()):
             self.analyzeURL(ret, k, v, self.config["p_post"], 0, self.config["header"])
         # Scan Post
-        for k,v in self.postparams.items():
+        for k,v in list(self.postparams.items()):
             self.analyzeURL(ret, k, v, self.config["p_post"], 1, self.config["header"])
         # Scan Headers
-        for key,params in self.header.items():
-            for k,v in params.items():
+        for key,params in list(self.header.items()):
+            for k,v in list(params.items()):
                 self.analyzeURL(ret, k, v, self.config["p_post"], 2, deepcopy(self.config["header"]), key)
                 
 
@@ -301,7 +303,7 @@ class targetScanner (baseClass.baseClass):
                         
                         rep = None
                         if not get_done:
-                            for k,V in self.params.items():
+                            for k,V in list(self.params.items()):
                                 rep, doBreak = self.analyzeURLblindly(i, testfile, k, V, v, backSym, self.config["p_post"], 0, fileobj.isUnix(), deepcopy(self.config["header"]))
                                 if (rep != None):
                                     rep.setVulnKeyVal(V)
@@ -312,7 +314,7 @@ class targetScanner (baseClass.baseClass):
                                     get_done = True
                         
                         if not post_done:
-                            for k,V in self.postparams.items():
+                            for k,V in list(self.postparams.items()):
                                 rep, doBreak = self.analyzeURLblindly(i, testfile, k, V, v, backSym, self.config["p_post"], 1, fileobj.isUnix(), deepcopy(self.config["header"]))
                                 if (rep != None):
                                     rep.setVulnKeyVal(V)
@@ -323,12 +325,12 @@ class targetScanner (baseClass.baseClass):
                                     post_done = True
                         
                     
-                        for key,params in self.header.items():
+                        for key,params in list(self.header.items()):
                             if (key not in head_done):
                                 head_done[key] = False
                             
                             if (not head_done[key]):
-                                for k,val in params.items():
+                                for k,val in list(params.items()):
                                     rep, doBreak = self.analyzeURLblindly(i, testfile, k, val, v, backSym, self.config["p_post"], 2, fileobj.isUnix(), deepcopy(self.config["header"]), key)
                                     if (rep != None):
                                         rep.setVulnKeyVal(val)
@@ -413,14 +415,14 @@ class targetScanner (baseClass.baseClass):
                 print("------------------------------------------------------")
                 print("It's possible that fimap was unable to retrieve the scriptpath")
                 print("because the regex for this kind of error message is missing.")
-                a = raw_input("Do you want to help me and send the URL of the site? [y = Print Info/N = Discard]")
+                a = input("Do you want to help me and send the URL of the site? [y = Print Info/N = Discard]")
                 if (a=="y" or a=="Y"):
                     print("-----------SEND THIS TO 'fimap.dev@gmail.com'-----------")
                     print("SUBJECT: fimap Regex")
                     print("ERROR  : Failed to retrieve script path.")
                     print("URL    : " + URL)
                     print("-----------------------------------------------------------")
-                    raw_input("Copy it and press enter to proceed with scanning...")
+                    input("Copy it and press enter to proceed with scanning...")
                 else:
                     print("No problem! I'll continue with your scan...")
 
@@ -676,7 +678,7 @@ class targetScanner (baseClass.baseClass):
                 boxarr = []
                 choose = []
                 idx = 0
-                for Name, langClass in xml2config.getAllLangSets().items():
+                for Name, langClass in list(xml2config.getAllLangSets().items()):
                     boxarr.append("[%d] %s"%(idx+1, Name))
                     choose.append(Name)
                     idx += 1
@@ -684,7 +686,7 @@ class targetScanner (baseClass.baseClass):
                 self.drawBox(boxheader, boxarr)
                 inp = ""
                 while (1==1):
-                    inp = raw_input("Script number: ")
+                    inp = input("Script number: ")
                     if (inp == "q" or inp == "Q"):
                         return([])
                     else:

@@ -26,6 +26,7 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
+from builtins import object
 from plugins.msf.pymetasploit.MetasploitObj import MsfObj
 from subprocess import *
 import re
