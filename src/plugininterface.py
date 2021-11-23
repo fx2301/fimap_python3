@@ -47,9 +47,11 @@ class plugininterface(baseClass):
                     self._log("Trying to load plugin '%s'..." %dir, self.LOG_DEBUG)
                     loadedClass = None
                     loader  = "from plugins.%s import %s\n" %(plugin, plugin)
-                    loader += "loadedClass = %s.%s(self.config)"%(plugin, plugin)
+                    loader += "loadedClass = %s.%s(self.config)\n"%(plugin, plugin)
                     try:
-                        exec(loader)
+                        tmp_locals = {'self': self}
+                        exec(loader, globals(), tmp_locals)
+                        loadedClass = tmp_locals['loadedClass']
                         loadedClass.addXMLInfo(info)
                         loadedClass.plugin_init()
                         loadedClass.printInfo()
